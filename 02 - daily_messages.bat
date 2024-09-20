@@ -1,1 +1,0 @@
-python src/main/python/daily_messages.py

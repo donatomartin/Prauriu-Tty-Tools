@@ -49,7 +49,7 @@ def get_current_clients(csv_file):
     
     return current_clients
 
-def send_daily_messages(departures):
+def send_press_messages(departures):
 
     vs = "="*18
     
@@ -59,7 +59,7 @@ def send_daily_messages(departures):
         print("\t", end="")
         print(f"{i}. {client[0]} - {client[1]}")
 
-    excluded_str = input(f"\nSelect the clients to {colorama.Fore.GREEN} exclude from the daily messages {colorama.Fore.RESET} in the list above (separated by commas): ").strip()
+    excluded_str = input(f"\nSelect the clients to {colorama.Fore.GREEN} exclude from the press messages {colorama.Fore.RESET} in the list above (separated by commas): ").strip()
     
     excluded_indexes = []
     try:
@@ -91,4 +91,4 @@ def send_daily_messages(departures):
 
 if __name__ == '__main__':
     departures = get_current_clients(CSV_FILE)
-    send_daily_messages(departures)
+    send_press_messages(departures)
