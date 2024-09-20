@@ -1,19 +1,23 @@
+#!/usr/bin/env python3
+
 import csv
 from datetime import datetime, timedelta
+
 import pywhatkit as kit
 import colorama
 
 colorama.init()
 
-csv_file = 'clients.csv'
-datetime_format = '%d/%m/%Y %H:%M:%S'
-today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) # Get today's date and normalize it to midnight
+CSV_FILE = 'clients.csv'
+DT_FORMAT = '%d/%m/%Y %H:%M:%S'
+TODAY = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) # Get today's date and normalize it to midnight
 
-with open('templates/press.template', encoding='utf-8') as file:
-    PRESS_TEMPLATE = file.read()
-    
-with open('templates/magazines.template', encoding='utf-8') as file:
-    MAGAZINES = file.read()
+def getTemplate(template_name):
+    with open(f'src/resources/templates/{template_name}.template', encoding='utf-8') as file:
+        return file.read()
+
+PRESS_TEMPLATE = getTemplate('press')
+MAGAZINES = getTemplate('magazines')
 
 def get_current_clients(csv_file):
     
@@ -35,12 +39,12 @@ def get_current_clients(csv_file):
             if phone == '':
                 phone = f'{colorama.Fore.RED}NO PHONE{colorama.Fore.RESET}'
             
-            arrival = datetime.strptime(row['Przyjazd'], datetime_format)
+            arrival = datetime.strptime(row['Przyjazd'], DT_FORMAT)
             
-            departure = datetime.strptime(row['Wyjazd'], datetime_format)
+            departure = datetime.strptime(row['Wyjazd'], DT_FORMAT)
             departure += timedelta(days=1)
             
-            if (arrival <= today <= departure):
+            if (arrival <= TODAY <= departure):
                 current_clients.append([name, phone])
     
     return current_clients
@@ -86,5 +90,5 @@ def send_daily_messages(departures):
             print(f"Error sending message to {client[0]}")
 
 if __name__ == '__main__':
-    departures = get_current_clients(csv_file)
+    departures = get_current_clients(CSV_FILE)
     send_daily_messages(departures)

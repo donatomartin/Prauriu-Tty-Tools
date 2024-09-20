@@ -1,0 +1,1 @@
+python src/main/python/rating_messages.py

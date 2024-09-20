@@ -1,19 +1,23 @@
+#!/usr/bin/env python3
+
 import csv
 from datetime import datetime, timedelta
+
 import pywhatkit as kit
 import colorama
 
 colorama.init()
 
-csv_file = 'clients.csv'
-datetime_format = '%d/%m/%Y %H:%M:%S'
-today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) # Get today's date and normalize it to midnight
+CSV_FILE = 'clients.csv'
+DT_FORMAT = '%d/%m/%Y %H:%M:%S'
+TODAY = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) # Get today's date and normalize it to midnight
 
-with open('templates/booking.template', encoding='utf-8') as file:
-    BOOKING_TEMPLATE = file.read()
+def getTemplate(template_name):
+    with open(f'src/resources/templates/{template_name}.template', encoding='utf-8') as file:
+        return file.read()
     
-with open('templates/google.template', encoding='utf-8') as file:
-    GOOGLE_TEMPLATE = file.read()
+BOOKING_TEMPLATE = getTemplate('booking')
+GOOGLE_TEMPLATE = getTemplate('google')
 
 def get_departures(csv_file):
     
@@ -35,19 +39,19 @@ def get_departures(csv_file):
             if phone == '':
                 phone = f'{colorama.Fore.RED}NO PHONE{colorama.Fore.RESET}'
             
-            departure = datetime.strptime(row['Wyjazd'], datetime_format)
+            departure = datetime.strptime(row['Wyjazd'], DT_FORMAT)
             departure += timedelta(days=1)
             
-            if (today == departure):
+            if (TODAY == departure):
                 departures_today.append([name, phone])
     
     return departures_today
 
 def send_rate_messages(departures):
 
-    vs = "="*18
+    vertical_sep = "="*18
     
-    print("\n{0}\n DEPARTURES TODAY \n{0}\n".format(vs))
+    print("\n{0}\n DEPARTURES TODAY \n{0}\n".format(vertical_sep))
     
     for i, client in enumerate(departures):
         print("\t", end="")
@@ -71,5 +75,5 @@ def send_rate_messages(departures):
             print(f"Error sending message to {client[0]}")
 
 if __name__ == '__main__':
-    departures = get_departures(csv_file)
+    departures = get_departures(CSV_FILE)
     send_rate_messages(departures)
