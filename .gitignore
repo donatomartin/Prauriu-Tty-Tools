@@ -1,2 +1,4 @@
-/clients.csv
-/PyWhatKit_DB.txt
+venv
+*.xls
+*.csv
+*.txt
