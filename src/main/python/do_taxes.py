@@ -45,7 +45,7 @@ class Record:
         )
 
     def serialize(self, category):
-        return f"{self.id},{category},{self.date.strftime('%d/%m/%Y')},{self.amount:.2f}€,{self.description}"
+        return f"{self.id},{category},{self.date.strftime('%d/%m/%Y')},{self.amount:.2f},{self.description}"
 
 
 sabadell = Source(
@@ -99,7 +99,7 @@ def get_values_from_xls(source):
     book = xlrd.open_workbook(source.filename)
     sheet = book.sheet_by_index(0)
 
-    bank_records = []
+    records = []
     for row in range(source.start_row, sheet.nrows):
         date = datetime.strptime(sheet.cell_value(row, source.date_col), "%d/%m/%Y")
         amount = float(sheet.cell_value(row, source.amount_col))
@@ -107,13 +107,13 @@ def get_values_from_xls(source):
             source.sourcename + ": " + sheet.cell_value(row, source.description_col)
         ).strip()
 
-        bank_records.append(Record(date, amount, description))
+        records.append(Record(date, amount, description))
 
-    return bank_records
+    return records
 
 
 def get_values_from_csv(source):
-    bank_records = []
+    records = []
     with open(source.filename, newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -125,9 +125,9 @@ def get_values_from_csv(source):
                 source.sourcename + ": " + row[source.description_col]
             ).strip()
 
-            bank_records.append(Record(date, amount, description))
+            records.append(Record(date, amount, description))
 
-    return bank_records
+    return records
 
 
 def get_values(source):
@@ -199,7 +199,7 @@ def print_monthly_records(records, title="Monthly Records"):
 
 def main():
 
-    # Load bank records from both banks
+    # Load records from all sources
     records = []
     records += get_values(sabadell)
     records += get_values(santander)
@@ -242,8 +242,8 @@ def main():
     print_monthly_records(other_records, title="Other Records")
 
     # Serialize all records to a CSV file
-    with open("bank_records_output.csv", "w", encoding="utf-8") as csvfile:
-        csvfile.write("Category,Date,Amount,Description\n")
+    with open("tax_records_output.csv", "w", encoding="utf-8") as csvfile:
+        csvfile.write("Id,Category,Date,Amount,Description\n")
         for records in smartbox_records:
             csvfile.write(records.serialize("smartbox") + "\n")
         for records in tpv_records:
