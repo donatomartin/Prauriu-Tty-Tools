@@ -22,6 +22,8 @@ with open("tax_records_output.csv", newline="", encoding="utf-8") as csvfile:
 
         pdf_output_data[row["Category"]][row["Date"][3:]].append(
             {
+                "Id": row["Id"],
+                "Date": row["Date"],
                 "Amount": row["Amount"],
                 "Description": row["Description"],
             }
@@ -38,7 +40,10 @@ def print_formatted_data():
             print(f"  {colorama.Fore.BLUE}Date: {date}")
             for entry in entries:
                 print(
-                    f" {colorama.Fore.GREEN}{entry['Amount']:>10}€{colorama.Fore.RESET}    {entry['Description']}"
+                    f"{colorama.Fore.BLUE}{entry["Id"]:>4}.{colorama.Fore.RESET} "
+                    + f"{entry["Date"]} "
+                    + f"{colorama.Fore.GREEN}{entry["Amount"]:>10}€{colorama.Fore.RESET} "
+                    + f"   {entry["Description"]}"
                 )
             print(
                 f"  Total: "

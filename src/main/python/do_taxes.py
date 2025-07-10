@@ -159,7 +159,7 @@ def filter_by_description(records, regex_pattern):
 def split_by_months(records):
     months = {}
     for record in records:
-        month_key = record.date.strftime("%Y-%m")
+        month_key = record.date.strftime("%m/%Y")
         if month_key not in months:
             months[month_key] = []
         months[month_key].append(record)
@@ -178,23 +178,21 @@ def print_records(records):
         print(record)
 
 
-def print_monthly_records(records, title="Monthly Records"):
+def print_monthly_records(records, title="unknown"):
 
-    print(f"\n\n{title}")
-    print("=" * len(title))
+    print(f"\n{colorama.Fore.YELLOW}{"-" * 40}")
+    print(f"{colorama.Fore.YELLOW}{"Category: " + title}")
+    print(f"{colorama.Fore.YELLOW}{"-" * 40}\n")
 
     # Split records by months
     monthly_records = split_by_months(records)
 
     for month, records in monthly_records.items():
-        print(f"\nRecords for {month}:\n")
+        print(f"{colorama.Fore.BLUE}Date: {month}")
         print_records(records)
         total = sum_amounts(records)
 
-        color = colorama.Fore.RED if total < 0 else colorama.Fore.GREEN
-        print(
-            f"\n{colorama.Fore.BLUE}Total for {month}:{colorama.Fore.RESET} {color}{total:.2f}€{colorama.Fore.RESET}"
-        )
+        print(f"Total: {colorama.Fore.RED}{total:.2f}€{colorama.Fore.RESET}\n")
 
 
 def main():
@@ -234,12 +232,12 @@ def main():
     )
 
     # Print all records
-    print_monthly_records(smartbox_records, title="Smartbox Records")
-    print_monthly_records(tpv_records, title="TPV/Liquidacion Records")
-    print_monthly_records(airbnb_records, title="Airbnb Records")
-    print_monthly_records(multipass_records, title="Multipass Records")
-    print_monthly_records(colectivia_records, title="Colectivia Records")
-    print_monthly_records(other_records, title="Other Records")
+    print_monthly_records(smartbox_records, title="smartbox")
+    print_monthly_records(tpv_records, title="ventas")
+    print_monthly_records(airbnb_records, title="airbnb")
+    print_monthly_records(multipass_records, title="multipass")
+    print_monthly_records(colectivia_records, title="colectivia")
+    print_monthly_records(other_records, title="other")
 
     # Serialize all records to a CSV file
     with open("tax_records_output.csv", "w", encoding="utf-8") as csvfile:
