@@ -247,7 +247,7 @@ def main():
         for records in smartbox_records:
             csvfile.write(records.serialize("smartbox") + "\n")
         for records in tpv_records:
-            csvfile.write(records.serialize("tpv") + "\n")
+            csvfile.write(records.serialize("ventas") + "\n")
         for records in airbnb_records:
             csvfile.write(records.serialize("airbnb") + "\n")
         for records in multipass_records:
